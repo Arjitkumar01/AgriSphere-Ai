@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Irrigation — AgriSphere AI</title>
+
+  <!-- Google Font: Poppins (same as every other page) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Reusing the SAME stylesheets as every other dashboard page.
+       No new CSS file is introduced — every element below is built
+       from class names that already exist in style.css/dashboard.css
+       (glass, overview-card, ai-card, activity-card, btn, progress-bar).
+       The circular water gauge is built with an inline CSS
+       conic-gradient, updated by irrigation.js, so no new
+       stylesheet rule is needed just for that one shape. -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body class="dashboard-body">
+
+  <!-- Mobile sidebar overlay (same pattern as every other page) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+  <!-- ===================================================
+       LEFT SIDEBAR
+       Identical structure to dashboard.html, with
+       "Irrigation" marked as the active link.
+  ==================================================== -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar__brand">
+      <span class="navbar__logo">🌱</span>
+      <span class="navbar__name">AgriSphere<span class="navbar__name--accent">AI</span></span>
+    </a>
+
+    <nav class="sidebar__nav">
+      <span class="sidebar__section-label">Menu</span>
+
+      <a href="dashboard.html" class="sidebar__link">
+        <span class="sidebar__icon">📊</span> Dashboard
+      </a>
+      <a href="disease.html" class="sidebar__link">
+        <span class="sidebar__icon">🩺</span> Disease Detection
+      </a>
+      <a href="weather.html" class="sidebar__link">
+        <span class="sidebar__icon">⛅</span> Weather
+      </a>
+      <a href="soil.html" class="sidebar__link">
+        <span class="sidebar__icon">🧪</span> Soil Analysis
+      </a>
+      <a href="irrigation.html" class="sidebar__link sidebar__link--active">
+        <span class="sidebar__icon">💧</span> Irrigation
+      </a>
+      <a href="market.html" class="sidebar__link">
+        <span class="sidebar__icon">💹</span> Market Prices
+      </a>
+      <a href="chatbot.html" class="sidebar__link">
+        <span class="sidebar__icon">🤖</span> AI Assistant
+      </a>
+
+      <span class="sidebar__section-label">Account</span>
+
+      <a href="profile.html" class="sidebar__link">
+        <span class="sidebar__icon">👤</span> Farmer Profile
+      </a>
+    </nav>
+
+    <div class="sidebar__footer glass">
+      <p class="sidebar__footer-title">Need help?</p>
+      <p class="sidebar__footer-text">Ask the AI Assistant anytime.</p>
+    </div>
+  </aside>
+
+
+  <!-- ===================================================
+       MAIN COLUMN
+  ==================================================== -->
+  <div class="dashboard-main">
+
+    <!-- TOP NAVIGATION (same structure as every other page) -->
+    <header class="topnav">
+      <button class="topnav__menu-btn" id="sidebarToggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="topnav__title">
+        <h1>Irrigation</h1>
+        <p>Smart, AI-guided watering so every drop counts.</p>
+      </div>
+
+      <div class="topnav__right">
+        <button class="topnav__icon-btn" aria-label="Notifications">
+          🔔
+          <span class="topnav__badge">3</span>
+        </button>
+        <a href="profile.html" class="topnav__profile">
+          <span class="topnav__avatar">👨‍🌾</span>
+          <span class="topnav__profile-name">Ramesh Kumar</span>
+        </a>
+      </div>
+    </header>
+
+
+    <!-- ===================================================
+         PAGE CONTENT
+    ==================================================== -->
+    <main class="dashboard-content">
+
+      <!-- ===================================================
+           1. WATER RECOMMENDATION CARD (with Water Gauge)
+           A wide banner card (reusing .welcome-card) showing
+           the AI's overall irrigation suggestion on the left,
+           and a circular "Water Gauge" on the right showing
+           how full the recommended watering level is.
+      ==================================================== -->
+      <section class="welcome-card glass" id="waterRecommendationCard">
+
+        <div class="welcome-card__text">
+          <span class="eyebrow" id="irrigationDate">Today · Tuesday, 30 June</span>
+          <h2 id="recommendationTitle">Irrigate Field A today</h2>
+          <p id="recommendationText">Soil moisture has dropped below the optimal range. A moderate watering session is recommended this afternoon.</p>
+        </div>
+
+        <!-- Water Gauge: a circular ring built with a conic-gradient,
+             set inline and updated by irrigation.js. The percentage
+             text sits centered on top of the ring. -->
+        <div style="text-align: center;">
+          <div
+            id="waterGauge"
+            style="
+              width: 130px;
+              height: 130px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: conic-gradient(var(--color-accent) 0deg, rgba(255,255,255,0.08) 0deg);
+              margin: 0 auto;
+              transition: background 1.2s ease;
+            "
+          >
+            <!-- Inner circle creates the "ring" look, masking the center of the gradient -->
+            <div
+              style="
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background: var(--color-card);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <span id="waterGaugeValue" style="font-size: 1.4rem; font-weight: 700; color: var(--color-accent);">0%</span>
+              <span style="font-size: 0.65rem; color: var(--color-text-soft);">Water Need</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================
+           2–4. TODAY'S IRRIGATION DETAILS
+           Water Quantity, Best Time, and Soil Moisture shown
+           together as a responsive grid, reusing .overview-card.
+      ==================================================== -->
+      <section class="overview-grid">
+
+        <!-- Water Quantity -->
+        <article class="overview-card glass">
+          <div class="overview-card__top">
+            <span class="overview-card__icon">💧</span>
+            <span class="overview-card__tag">Today</span>
+          </div>
+          <h3 class="overview-card__value"><span id="waterQuantityValue">4,200</span> L</h3>
+          <p class="overview-card__label">Recommended Water Quantity</p>
+        </article>
+
+        <!-- Best Time -->
+        <article class="overview-card glass">
+          <div class="overview-card__top">
+            <span class="overview-card__icon">⏰</span>
+            <span class="overview-card__tag overview-card__tag--good">Optimal</span>
+          </div>
+          <h3 class="overview-card__value" id="bestTimeValue">5:30 – 7:00 AM</h3>
+          <p class="overview-card__label">Best Time to Irrigate</p>
+        </article>
+
+        <!-- Soil Moisture Card -->
+        <article class="overview-card glass">
+          <div class="overview-card__top">
+            <span class="overview-card__icon">🌱</span>
+            <span class="overview-card__tag overview-card__tag--warning" id="moistureTag">Moderate</span>
+          </div>
+          <h3 class="overview-card__value"><span id="soilMoistureValue">42</span>%</h3>
+          <p class="overview-card__label">Current Soil Moisture</p>
+          <div class="progress-bar"><div class="progress-bar__fill" id="soilMoistureBar" data-fill="42"></div></div>
+        </article>
+
+      </section>
+
+
+      <!-- ===================================================
+           5. WEATHER SUMMARY
+           A compact card summarizing today's weather as it
+           relates to irrigation planning (rain chance, temp).
+      ==================================================== -->
+      <section class="activity-card glass">
+        <h3 class="activity-card__title">Weather Summary</h3>
+
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-lg); align-items: center;">
+          <div style="font-size: 2.5rem;">⛅</div>
+          <div>
+            <p style="font-weight: 600;">28°C · Partly Cloudy</p>
+            <p class="overview-card__label">Rain chance: <span id="weatherRainChance">40</span>% this evening</p>
+          </div>
+          <div style="margin-left: auto;">
+            <p class="overview-card__label" style="text-align: right;">Humidity: <span id="weatherHumidity">65</span>%</p>
+            <p class="overview-card__label" style="text-align: right;">Wind: <span id="weatherWind">12</span> km/h</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================
+           6. AI RECOMMENDATION CARD
+           Reuses the .ai-card component from the dashboard.
+      ==================================================== -->
+      <section class="ai-card glass">
+        <div class="ai-card__icon">🤖</div>
+        <div class="ai-card__content">
+          <span class="eyebrow">AI Irrigation Recommendation</span>
+          <h3 id="aiIrrigationTitle">Reduce irrigation in Field B by 15% this week</h3>
+          <p id="aiIrrigationText">Soil moisture is above optimal range and rain is expected in 2 days. Holding off irrigation will save water without affecting crop health.</p>
+        </div>
+        <button id="applyRecommendationBtn" class="btn btn--ghost ai-card__action" type="button">Apply Suggestion</button>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+  <script src="js/irrigation.js"></script>
+</body>
+</html>

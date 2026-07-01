@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriSphere AI — Empowering Farmers with Artificial Intelligence</title>
+
+  <!-- Google Font: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Our stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================================================
+       1. STICKY NAVBAR
+       This bar stays fixed at the top of the screen.
+       It uses a glass effect (blurred transparent background).
+  ==================================================== -->
+  <header class="navbar" id="navbar">
+    <div class="navbar__inner">
+
+      <!-- Logo / Brand -->
+      <a href="#top" class="navbar__brand">
+        <span class="navbar__logo">🌱</span>
+        <span class="navbar__name">AgriSphere<span class="navbar__name--accent">AI</span></span>
+      </a>
+
+      <!-- Desktop navigation links -->
+      <nav class="navbar__links" id="navLinks">
+        <a href="#features" class="navbar__link">Features</a>
+        <a href="#how-it-works" class="navbar__link">How It Works</a>
+        <a href="#why-us" class="navbar__link">Why Us</a>
+        <a href="#cta" class="navbar__link">Get Started</a>
+      </nav>
+
+      <!-- Call-to-action button (desktop) -->
+      <a href="dashboard.html" class="btn btn--primary navbar__cta">Launch Dashboard</a>
+
+      <!-- Hamburger button (shows only on mobile) -->
+      <button class="navbar__toggle" id="navToggle" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <!-- Mobile dropdown menu -->
+    <nav class="navbar__mobile" id="navMobile">
+      <a href="#features" class="navbar__link">Features</a>
+      <a href="#how-it-works" class="navbar__link">How It Works</a>
+      <a href="#why-us" class="navbar__link">Why Us</a>
+      <a href="#cta" class="navbar__link">Get Started</a>
+      <a href="dashboard.html" class="btn btn--primary navbar__mobile-cta">Launch Dashboard</a>
+    </nav>
+  </header>
+
+
+  <!-- ===================================================
+       2. HERO SECTION
+       Big headline + subtext + buttons on the left.
+       A "live AI scan" visual on the right — this is our
+       signature moment: a leaf being scanned by an AI line,
+       with a result card popping up. It shows, not tells,
+       what the product does.
+  ==================================================== -->
+  <main id="top">
+    <section class="hero">
+      <!-- Soft glowing background shapes (pure CSS, no images) -->
+      <div class="hero__glow hero__glow--one"></div>
+      <div class="hero__glow hero__glow--two"></div>
+
+      <div class="hero__inner">
+
+        <!-- Left side: text content -->
+        <div class="hero__content reveal">
+          <span class="eyebrow">Built for Google Hack2Skill</span>
+
+          <h1 class="hero__title">
+            Farming decisions,
+            <br />
+            made <span class="text-gradient">intelligent.</span>
+          </h1>
+
+          <p class="hero__subtitle">
+            AgriSphere AI turns satellite data, soil sensors, and crop images
+            into clear, actionable guidance — so every farmer can grow more
+            with less guesswork.
+          </p>
+
+          <div class="hero__actions">
+            <a href="dashboard.html" class="btn btn--primary btn--lg">
+              Launch Dashboard
+              <span class="btn__arrow">→</span>
+            </a>
+            <a href="#how-it-works" class="btn btn--ghost btn--lg">See How It Works</a>
+          </div>
+
+          <!-- Small trust line under the buttons -->
+          <p class="hero__trust">No setup needed · Works on any device · Free for farmers</p>
+        </div>
+
+        <!-- Right side: signature visual — AI scanning card -->
+        <div class="hero__visual reveal">
+          <div class="scan-card">
+            <div class="scan-card__header">
+              <span class="scan-card__dot"></span>
+              <span class="scan-card__title">Crop Scan — Live</span>
+            </div>
+
+            <!-- The "leaf" area being scanned -->
+            <div class="scan-card__body">
+              <div class="scan-card__leaf">🌿</div>
+              <div class="scan-card__line"></div>
+            </div>
+
+            <!-- Result that fades in after scanning -->
+            <div class="scan-card__result">
+              <span class="scan-card__result-label">Diagnosis</span>
+              <span class="scan-card__result-value">Healthy — 96% confidence</span>
+            </div>
+          </div>
+
+          <!-- Small floating stat chips around the main card -->
+          <div class="float-chip float-chip--one">💧 Irrigation optimized</div>
+          <div class="float-chip float-chip--two">📈 Yield +18%</div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         3. ANIMATED STATISTICS
+         Numbers count up from 0 when scrolled into view.
+         data-target = the final number for main.js to read.
+    ==================================================== -->
+    <section class="stats reveal">
+      <div class="stats__inner">
+
+        <div class="stat">
+          <span class="stat__number" data-target="50000">0</span>
+          <span class="stat__suffix">+</span>
+          <p class="stat__label">Farmers Empowered</p>
+        </div>
+
+        <div class="stat">
+          <span class="stat__number" data-target="98">0</span>
+          <span class="stat__suffix">%</span>
+          <p class="stat__label">Disease Detection Accuracy</p>
+        </div>
+
+        <div class="stat">
+          <span class="stat__number" data-target="32">0</span>
+          <span class="stat__suffix">%</span>
+          <p class="stat__label">Average Water Saved</p>
+        </div>
+
+        <div class="stat">
+          <span class="stat__number" data-target="24">0</span>
+          <span class="stat__suffix">/7</span>
+          <p class="stat__label">AI Assistant Availability</p>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         4. FEATURES SECTION
+         A grid of glass cards, one per AI module.
+    ==================================================== -->
+    <section class="features" id="features">
+      <div class="section-heading reveal">
+        <span class="eyebrow">Platform</span>
+        <h2 class="section-title">One platform, every farming decision</h2>
+        <p class="section-subtitle">
+          Each module is powered by AI models trained specifically for agriculture.
+        </p>
+      </div>
+
+      <div class="features__grid">
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon">🩺</div>
+          <h3 class="feature-card__title">Crop Disease Detection</h3>
+          <p class="feature-card__text">Upload a photo of any leaf and get an instant diagnosis with treatment steps.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon">⛅</div>
+          <h3 class="feature-card__title">Weather Intelligence</h3>
+          <p class="feature-card__text">Hyper-local forecasts that warn you before frost, storms, or heatwaves hit.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon">💧</div>
+          <h3 class="feature-card__title">Smart Irrigation</h3>
+          <p class="feature-card__text">AI calculates exactly how much water your fields need, and when.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon">🧪</div>
+          <h3 class="feature-card__title">Soil Analysis</h3>
+          <p class="feature-card__text">Understand pH, nutrients, and moisture levels with a single scan.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon">🌾</div>
+          <h3 class="feature-card__title">Fertilizer Recommendation</h3>
+          <p class="feature-card__text">Get the right fertilizer mix and quantity for your exact soil type.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon">🤖</div>
+          <h3 class="feature-card__title">AI Farming Assistant</h3>
+          <p class="feature-card__text">Ask questions in plain language and get answers grounded in agronomy.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon">💹</div>
+          <h3 class="feature-card__title">Market Price Dashboard</h3>
+          <p class="feature-card__text">Track live mandi prices so you know exactly when to sell.</p>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon">📊</div>
+          <h3 class="feature-card__title">Analytics Dashboard</h3>
+          <p class="feature-card__text">See your farm's full performance history in one clean view.</p>
+        </article>
+
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         5. HOW IT WORKS
+         A simple 3-step horizontal process.
+    ==================================================== -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="section-heading reveal">
+        <span class="eyebrow">Process</span>
+        <h2 class="section-title">From field data to clear decisions</h2>
+        <p class="section-subtitle">Three steps. No technical knowledge required.</p>
+      </div>
+
+      <div class="steps">
+
+        <div class="step reveal">
+          <span class="step__number">01</span>
+          <h3 class="step__title">Capture</h3>
+          <p class="step__text">Take a photo, connect a sensor, or enter your field location — AgriSphere collects the data automatically.</p>
+        </div>
+
+        <div class="step__connector"></div>
+
+        <div class="step reveal">
+          <span class="step__number">02</span>
+          <h3 class="step__title">Analyze</h3>
+          <p class="step__text">Our AI models process the data instantly, cross-checking weather, soil, and crop health signals.</p>
+        </div>
+
+        <div class="step__connector"></div>
+
+        <div class="step reveal">
+          <span class="step__number">03</span>
+          <h3 class="step__title">Act</h3>
+          <p class="step__text">You receive a clear recommendation — what to do, how much, and when — directly on your dashboard.</p>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         6. WHY CHOOSE AGRISPHERE AI
+         Two-column layout: text list on the left,
+         a glass "highlight" panel on the right.
+    ==================================================== -->
+    <section class="why-us" id="why-us">
+      <div class="why-us__inner">
+
+        <div class="why-us__content reveal">
+          <span class="eyebrow">Why AgriSphere AI</span>
+          <h2 class="section-title">Built for real farms, not demos</h2>
+
+          <ul class="why-list">
+            <li class="why-list__item">
+              <span class="why-list__check">✓</span>
+              <div>
+                <h4>Accurate, field-tested AI</h4>
+                <p>Trained on real crop and soil data, not generic datasets.</p>
+              </div>
+            </li>
+            <li class="why-list__item">
+              <span class="why-list__check">✓</span>
+              <div>
+                <h4>Works on low-end devices</h4>
+                <p>Lightweight pages that load fast, even on slow connections.</p>
+              </div>
+            </li>
+            <li class="why-list__item">
+              <span class="why-list__check">✓</span>
+              <div>
+                <h4>Simple, jargon-free guidance</h4>
+                <p>Recommendations written in plain language anyone can act on.</p>
+              </div>
+            </li>
+            <li class="why-list__item">
+              <span class="why-list__check">✓</span>
+              <div>
+                <h4>One dashboard for everything</h4>
+                <p>Disease, weather, soil, irrigation, and market data in one place.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="why-us__panel reveal">
+          <div class="glass-panel">
+            <div class="glass-panel__row">
+              <span>Soil Moisture</span>
+              <div class="progress-bar"><div class="progress-bar__fill" data-fill="72"></div></div>
+            </div>
+            <div class="glass-panel__row">
+              <span>Crop Health</span>
+              <div class="progress-bar"><div class="progress-bar__fill" data-fill="91"></div></div>
+            </div>
+            <div class="glass-panel__row">
+              <span>Yield Forecast</span>
+              <div class="progress-bar"><div class="progress-bar__fill" data-fill="85"></div></div>
+            </div>
+            <div class="glass-panel__row">
+              <span>Water Efficiency</span>
+              <div class="progress-bar"><div class="progress-bar__fill" data-fill="64"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ===================================================
+         7. CALL TO ACTION
+         Centered, high-contrast closing section.
+    ==================================================== -->
+    <section class="cta" id="cta">
+      <div class="cta__inner reveal">
+        <h2 class="cta__title">Ready to grow smarter?</h2>
+        <p class="cta__text">Join thousands of farmers already using AI to protect their crops and increase their yield.</p>
+        <a href="dashboard.html" class="btn btn--primary btn--lg">
+          Launch Dashboard
+          <span class="btn__arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ===================================================
+       8. FOOTER
+  ==================================================== -->
+  <footer class="footer">
+    <div class="footer__inner">
+
+      <div class="footer__brand">
+        <span class="navbar__logo">🌱</span>
+        <span class="navbar__name">AgriSphere<span class="navbar__name--accent">AI</span></span>
+        <p class="footer__tagline">Empowering Farmers with Artificial Intelligence for Better Decisions, Higher Yields, and Sustainable Agriculture.</p>
+      </div>
+
+      <div class="footer__links">
+        <div class="footer__col">
+          <h4>Platform</h4>
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+        <div class="footer__col">
+          <h4>Company</h4>
+          <a href="#why-us">Why Us</a>
+          <a href="#cta">Get Started</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <p>&copy; 2026 AgriSphere AI. Built for Google Hack2Skill Hackathon.</p>
+    </div>
+  </footer>
+
+  <!-- Our JavaScript file (loaded at the end so the HTML loads first) -->
+  <script src="js/main.js"></script>
+</body>
+</html>

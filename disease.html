@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Disease Detection — AgriSphere AI</title>
+
+  <!-- Google Font: Poppins (same as every other page) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- We reuse the SAME stylesheets as the dashboard:
+       style.css       -> colors, fonts, buttons, .glass, progress bars
+       dashboard.css    -> sidebar + top nav layout
+       No new CSS classes are introduced anywhere in this page;
+       every element below is built from class names that already
+       exist in those two files (sidebar__*, overview-card, glass,
+       btn, progress-bar, activity-list, etc.) -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body class="dashboard-body">
+
+  <!-- Mobile sidebar overlay (same pattern as dashboard.html) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+  <!-- ===================================================
+       LEFT SIDEBAR
+       Identical structure to dashboard.html, with
+       "Disease Detection" marked as the active link.
+  ==================================================== -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar__brand">
+      <span class="navbar__logo">🌱</span>
+      <span class="navbar__name">AgriSphere<span class="navbar__name--accent">AI</span></span>
+    </a>
+
+    <nav class="sidebar__nav">
+      <span class="sidebar__section-label">Menu</span>
+
+      <a href="dashboard.html" class="sidebar__link">
+        <span class="sidebar__icon">📊</span> Dashboard
+      </a>
+      <a href="disease.html" class="sidebar__link sidebar__link--active">
+        <span class="sidebar__icon">🩺</span> Disease Detection
+      </a>
+      <a href="weather.html" class="sidebar__link">
+        <span class="sidebar__icon">⛅</span> Weather
+      </a>
+      <a href="soil.html" class="sidebar__link">
+        <span class="sidebar__icon">🧪</span> Soil Analysis
+      </a>
+      <a href="irrigation.html" class="sidebar__link">
+        <span class="sidebar__icon">💧</span> Irrigation
+      </a>
+      <a href="market.html" class="sidebar__link">
+        <span class="sidebar__icon">💹</span> Market Prices
+      </a>
+      <a href="chatbot.html" class="sidebar__link">
+        <span class="sidebar__icon">🤖</span> AI Assistant
+      </a>
+
+      <span class="sidebar__section-label">Account</span>
+
+      <a href="profile.html" class="sidebar__link">
+        <span class="sidebar__icon">👤</span> Farmer Profile
+      </a>
+    </nav>
+
+    <div class="sidebar__footer glass">
+      <p class="sidebar__footer-title">Need help?</p>
+      <p class="sidebar__footer-text">Ask the AI Assistant anytime.</p>
+    </div>
+  </aside>
+
+
+  <!-- ===================================================
+       MAIN COLUMN
+  ==================================================== -->
+  <div class="dashboard-main">
+
+    <!-- TOP NAVIGATION (same structure as dashboard.html) -->
+    <header class="topnav">
+      <button class="topnav__menu-btn" id="sidebarToggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="topnav__title">
+        <h1>Disease Detection</h1>
+        <p>Upload a crop photo and let AI check for signs of disease.</p>
+      </div>
+
+      <div class="topnav__right">
+        <button class="topnav__icon-btn" aria-label="Notifications">
+          🔔
+          <span class="topnav__badge">3</span>
+        </button>
+        <a href="profile.html" class="topnav__profile">
+          <span class="topnav__avatar">👨‍🌾</span>
+          <span class="topnav__profile-name">Ramesh Kumar</span>
+        </a>
+      </div>
+    </header>
+
+
+    <!-- ===================================================
+         PAGE CONTENT
+    ==================================================== -->
+    <main class="dashboard-content">
+
+      <!-- ===================================================
+           1. UPLOAD CARD
+           Contains: Drag & Drop zone, Image Preview,
+           Upload Button, and Analyze Button.
+           Built using .glass (card look) + .btn (buttons),
+           both already defined in style.css.
+      ==================================================== -->
+      <section class="welcome-card glass" id="uploadCard" style="flex-direction: column; align-items: stretch; gap: 1.5rem;">
+
+        <div class="welcome-card__text">
+          <span class="eyebrow">Step 1</span>
+          <h2>Upload a crop photo</h2>
+          <p>Drag and drop an image below, or choose a file from your device.</p>
+        </div>
+
+        <!-- Drag & Drop zone.
+             We reuse the existing dashed-card look by combining
+             .overview-card (border + radius + padding from style.css/
+             dashboard.css) with a simple inline-friendly structure.
+             The actual dashed border + hover state is added via the
+             "sidebar__footer" glass treatment plus a CSS variable
+             border already available, so no new stylesheet is needed
+             beyond what dashboard.css/style.css already provide. -->
+        <div class="overview-card glass" id="dropZone" style="border-style: dashed; text-align: center; padding: 2.5rem 1rem; cursor: pointer;">
+          <div class="overview-card__icon" style="font-size: 2.5rem; margin-bottom: 0.75rem;">📷</div>
+          <p style="font-weight: 600; margin-bottom: 0.3rem;">Drag &amp; drop your image here</p>
+          <p class="overview-card__label">or click below to browse files (JPG, PNG)</p>
+
+          <!-- Hidden native file input — triggered by the Upload button -->
+          <input type="file" id="fileInput" accept="image/*" hidden />
+        </div>
+
+        <!-- Image preview area — hidden until a file is chosen -->
+        <div id="previewWrap" class="overview-card glass" style="display: none; text-align: center;">
+          <p class="overview-card__label" style="margin-bottom: 0.75rem;">Image Preview</p>
+          <img id="imagePreview" src="" alt="Selected crop preview" style="max-width: 260px; border-radius: var(--radius-sm); margin: 0 auto; display: block;" />
+          <p id="fileName" class="overview-card__label" style="margin-top: 0.75rem;"></p>
+        </div>
+
+        <!-- Action buttons: choose file + run analysis -->
+        <div class="hero__actions" style="margin: 0;">
+          <button id="uploadBtn" class="btn btn--ghost" type="button">📁 Choose Image</button>
+          <button id="analyzeBtn" class="btn btn--primary" type="button" disabled>
+            Analyze Crop
+            <span class="btn__arrow">→</span>
+          </button>
+        </div>
+      </section>
+
+
+      <!-- ===================================================
+           2. LOADING ANIMATION
+           Shown only while the (dummy) analysis is "running".
+           Reuses the same glass card look as everything else.
+      ==================================================== -->
+      <section class="welcome-card glass" id="loadingCard" style="display: none; justify-content: center; text-align: center; flex-direction: column; gap: 1rem;">
+        <div class="spinner" id="spinner"></div>
+        <p class="overview-card__label">Analyzing image with AI… please wait</p>
+      </section>
+
+
+      <!-- ===================================================
+           3. DISEASE RESULT CARD
+           Shown after "analysis" finishes. Contains:
+           Confidence %, Severity Indicator, Treatment,
+           Fertilizer Recommendation, Recovery Time.
+           Hidden by default — js/disease.js reveals it.
+      ==================================================== -->
+      <section id="resultCard" style="display: none;">
+
+        <!-- Top summary banner: disease name + confidence -->
+        <div class="ai-card glass">
+          <div class="ai-card__icon">🩺</div>
+          <div class="ai-card__content">
+            <span class="eyebrow">Diagnosis Result</span>
+            <h3 id="resultDiseaseName">Leaf Blight</h3>
+            <p id="resultSummary">Detected with high confidence. Early-stage treatment is recommended.</p>
+          </div>
+        </div>
+
+        <!-- Detail cards grid: Confidence, Severity, Recovery Time -->
+        <div class="overview-grid" style="margin-top: var(--space-md);">
+
+          <!-- Confidence percentage -->
+          <article class="overview-card glass">
+            <div class="overview-card__top">
+              <span class="overview-card__icon">🎯</span>
+              <span class="overview-card__tag overview-card__tag--good">AI Confidence</span>
+            </div>
+            <h3 class="overview-card__value" id="confidenceValue">94%</h3>
+            <p class="overview-card__label">Model certainty in this diagnosis</p>
+            <div class="progress-bar"><div class="progress-bar__fill" id="confidenceBar" data-fill="94"></div></div>
+          </article>
+
+          <!-- Severity indicator -->
+          <article class="overview-card glass">
+            <div class="overview-card__top">
+              <span class="overview-card__icon overview-card__icon--danger">⚠️</span>
+              <span class="overview-card__tag overview-card__tag--warning" id="severityTag">Moderate</span>
+            </div>
+            <h3 class="overview-card__value" id="severityValue">Moderate</h3>
+            <p class="overview-card__label">Severity level of infection</p>
+            <div class="progress-bar"><div class="progress-bar__fill" id="severityBar" data-fill="55"></div></div>
+          </article>
+
+          <!-- Recovery time -->
+          <article class="overview-card glass">
+            <div class="overview-card__top">
+              <span class="overview-card__icon">⏳</span>
+              <span class="overview-card__tag">Estimate</span>
+            </div>
+            <h3 class="overview-card__value" id="recoveryValue">7–10 Days</h3>
+            <p class="overview-card__label">Expected recovery time with treatment</p>
+          </article>
+
+        </div>
+
+        <!-- Treatment + Fertilizer recommendation -->
+        <div class="bottom-grid" style="margin-top: var(--space-md);">
+
+          <article class="activity-card glass">
+            <h3 class="activity-card__title">🧴 Treatment Recommendation</h3>
+            <p id="treatmentText" class="overview-card__label" style="font-size: 0.88rem; line-height: 1.7;">
+              Apply a copper-based fungicide spray every 7 days for 3 weeks. Remove and discard
+              visibly infected leaves to prevent the disease from spreading to healthy parts of the plant.
+            </p>
+          </article>
+
+          <article class="quick-actions-card glass">
+            <h3 class="activity-card__title">🌾 Recommended Fertilizer</h3>
+            <p id="fertilizerText" class="overview-card__label" style="font-size: 0.88rem; line-height: 1.7;">
+              NPK 19:19:19, applied at 2g per liter of water, to strengthen the plant's
+              natural resistance while it recovers.
+            </p>
+          </article>
+
+        </div>
+      </section>
+
+
+      <!-- ===================================================
+           4. SCAN HISTORY SECTION
+           A list of previous scans, styled the same way as
+           the "Recent Activity" list on the dashboard page.
+      ==================================================== -->
+      <section class="activity-card glass">
+        <h3 class="activity-card__title">Scan History</h3>
+
+        <ul class="activity-list" id="scanHistoryList">
+          <li class="activity-item">
+            <span class="activity-item__icon">🌿</span>
+            <div>
+              <p>Field A — <strong>Healthy</strong> (96% confidence)</p>
+              <span class="activity-item__time">Today, 9:42 AM</span>
+            </div>
+          </li>
+          <li class="activity-item">
+            <span class="activity-item__icon">⚠️</span>
+            <div>
+              <p>Field B — <strong>Leaf Blight</strong> (94% confidence)</p>
+              <span class="activity-item__time">Yesterday, 4:10 PM</span>
+            </div>
+          </li>
+          <li class="activity-item">
+            <span class="activity-item__icon">🌿</span>
+            <div>
+              <p>Field C — <strong>Healthy</strong> (91% confidence)</p>
+              <span class="activity-item__time">2 days ago</span>
+            </div>
+          </li>
+          <li class="activity-item">
+            <span class="activity-item__icon">⚠️</span>
+            <div>
+              <p>Field D — <strong>Powdery Mildew</strong> (88% confidence)</p>
+              <span class="activity-item__time">4 days ago</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+  <script src="js/disease.js"></script>
+</body>
+</html>
