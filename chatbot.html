@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Farming Assistant | AgriSphere AI</title>
+
+<!-- Google Font: Poppins (consistent with rest of app) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Reused shared stylesheets only — no new CSS file for this page -->
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/dashboard.css" />
+
+<!-- ===================== PAGE-SPECIFIC INLINE STYLES ===================== -->
+<!-- Only layout/structure unique to the chatbot UI lives here.            -->
+<!-- Colors, fonts, glass/card/button rules are all reused from style.css   -->
+<!-- and dashboard.css — nothing is redefined here.                         -->
+<style>
+  /* Two-column grid: chat history sidebar + main chat window */
+  .chatbot-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 20px;
+    height: calc(100vh - 140px);
+    padding: 0 24px 24px;
+  }
+
+  /* ---- Chat History Sidebar ---- */
+  .chat-history {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    overflow: hidden;
+  }
+  .chat-history__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .chat-history__header h3 {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .chat-history__new-btn {
+    background: linear-gradient(135deg, #2E7D32, #43A047);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  .chat-history__new-btn:hover { opacity: 0.85; }
+
+  .chat-history__list {
+    list-style: none;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .chat-history__item {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(129, 199, 132, 0.15);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #C8E6C9;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chat-history__item:hover,
+  .chat-history__item--active {
+    background: rgba(67, 160, 71, 0.18);
+    border-color: #43A047;
+    color: #fff;
+  }
+
+  /* ---- Main Chat Window ---- */
+  .chat-window {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  .chat-window__messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-right: 6px;
+    margin-bottom: 12px;
+  }
+
+  /* Individual message row */
+  .chat-msg {
+    display: flex;
+    gap: 10px;
+    max-width: 80%;
+    animation: fadeInUp 0.3s ease;
+  }
+  .chat-msg--user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+  .chat-msg__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(129, 199, 132, 0.15);
+    flex-shrink: 0;
+    font-size: 1rem;
+  }
+  .chat-msg__bubble {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(129, 199, 132, 0.15);
+    border-radius: 14px;
+    padding: 10px 14px;
+    color: #E8F5E9;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .chat-msg--user .chat-msg__bubble {
+    background: linear-gradient(135deg, #2E7D32, #43A047);
+    color: #fff;
+    border: none;
+  }
+
+  /* Typing animation bubble (three bouncing dots) */
+  .chat-msg__bubble--typing {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 14px;
+  }
+  .typing-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #81C784;
+    animation: typingBounce 1.2s infinite ease-in-out;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-5px); opacity: 1; }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- Suggested Questions ---- */
+  .suggested-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .suggestion-chip {
+    background: rgba(67, 160, 71, 0.1);
+    border: 1px solid rgba(67, 160, 71, 0.35);
+    color: #C8E6C9;
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .suggestion-chip:hover {
+    background: #43A047;
+    color: #fff;
+  }
+
+  /* ---- Input Bar ---- */
+  .chat-window__input-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(129, 199, 132, 0.2);
+    border-radius: 30px;
+    padding: 8px 10px;
+  }
+  .chat-window__input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.88rem;
+    padding: 6px 8px;
+  }
+  .chat-window__input::placeholder { color: #81C784; opacity: 0.7; }
+
+  .chat-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(129, 199, 132, 0.15);
+    color: #C8E6C9;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .chat-icon-btn:hover { background: rgba(129, 199, 132, 0.3); }
+  .chat-icon-btn--send {
+    background: linear-gradient(135deg, #2E7D32, #43A047);
+    color: #fff;
+  }
+  .chat-icon-btn--send:hover { transform: scale(1.08); }
+
+  /* Voice button "listening" pulse state, toggled via JS */
+  .chat-icon-btn--listening {
+    background: #E53935;
+    color: #fff;
+    animation: pulseMic 1s infinite;
+  }
+  @keyframes pulseMic {
+    0% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.5); }
+    70% { box-shadow: 0 0 0 10px rgba(229, 57, 53, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(229, 57, 53, 0); }
+  }
+
+  /* Responsive: stack history above chat window on small screens */
+  @media (max-width: 768px) {
+    .chatbot-layout {
+      grid-template-columns: 1fr;
+      height: auto;
+    }
+    .chat-history { max-height: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== SIDEBAR (identical structure to all dashboard pages) ===================== -->
+<aside class="sidebar">
+  <div class="sidebar__logo">
+    <span class="logo-icon">🌱</span>
+    <span class="logo-text">AgriSphere<span class="accent">AI</span></span>
+  </div>
+
+  <nav class="sidebar__nav">
+    <a href="dashboard.html" class="sidebar__link">
+      <span class="sidebar__icon">📊</span> Dashboard
+    </a>
+    <a href="disease.html" class="sidebar__link">
+      <span class="sidebar__icon">🩺</span> Disease Detection
+    </a>
+    <a href="weather.html" class="sidebar__link">
+      <span class="sidebar__icon">⛅</span> Weather
+    </a>
+    <a href="soil.html" class="sidebar__link">
+      <span class="sidebar__icon">🧪</span> Soil Analysis
+    </a>
+    <a href="irrigation.html" class="sidebar__link">
+      <span class="sidebar__icon">💧</span> Irrigation
+    </a>
+    <a href="market.html" class="sidebar__link">
+      <span class="sidebar__icon">📈</span> Market
+    </a>
+    <!-- Current page — marked active -->
+    <a href="chatbot.html" class="sidebar__link sidebar__link--active">
+      <span class="sidebar__icon">🤖</span> AI Assistant
+    </a>
+    <a href="profile.html" class="sidebar__link">
+      <span class="sidebar__icon">👤</span> Profile
+    </a>
+  </nav>
+
+  <div class="sidebar__footer">
+    <a href="index.html" class="sidebar__link">
+      <span class="sidebar__icon">🚪</span> Logout
+    </a>
+  </div>
+</aside>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<div class="main-content">
+
+  <!-- ===================== TOP NAV (identical structure to all dashboard pages) ===================== -->
+  <header class="topnav">
+    <div class="topnav__title">
+      <h1>AI Farming Assistant</h1>
+      <p class="topnav__subtitle">Ask anything about your crops, soil, weather or market</p>
+    </div>
+    <div class="topnav__right">
+      <span class="topnav__notif">🔔</span>
+      <div class="topnav__profile">
+        <img src="https://i.pravatar.cc/40?img=12" alt="Farmer avatar" />
+        <span>Ramesh Kumar</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== CHATBOT LAYOUT ===================== -->
+  <!-- Two-column layout: Chat History Sidebar (left) + Main Chat Window (right) -->
+  <section class="chatbot-layout">
+
+    <!-- ============ CHAT HISTORY SIDEBAR ============ -->
+    <div class="glass chat-history">
+      <div class="chat-history__header">
+        <h3>Chat History</h3>
+        <button id="newChatBtn" class="chat-history__new-btn" title="Start new chat">+ New</button>
+      </div>
+      <ul id="chatHistoryList" class="chat-history__list">
+        <!-- History items injected dynamically by chatbot.js -->
+      </ul>
+    </div>
+
+    <!-- ============ MAIN CHAT WINDOW ============ -->
+    <div class="glass chat-window">
+
+      <!-- Chat messages render here -->
+      <div id="chatMessages" class="chat-window__messages">
+        <!-- Initial AI greeting message (also serves as template structure) -->
+        <div class="chat-msg chat-msg--ai">
+          <div class="chat-msg__avatar">🤖</div>
+          <div class="chat-msg__bubble">
+            <p>Namaste 🙏 I'm your AgriSphere AI Assistant. Ask me about crop diseases, irrigation, soil health, weather or market prices — I'm here to help!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SUGGESTED QUESTIONS ============ -->
+      <!-- Quick-tap chips to populate common queries -->
+      <div id="suggestedQuestions" class="suggested-questions">
+        <button class="suggestion-chip" data-question="What crop should I plant this season?">🌾 What crop should I plant this season?</button>
+        <button class="suggestion-chip" data-question="How much water does my field need today?">💧 How much water does my field need today?</button>
+        <button class="suggestion-chip" data-question="Is there a chance of rain this week?">🌦️ Is there a chance of rain this week?</button>
+        <button class="suggestion-chip" data-question="What is the current price of wheat?">📈 What is the current price of wheat?</button>
+      </div>
+
+      <!-- ============ CHAT INPUT BAR ============ -->
+      <div class="chat-window__input-bar">
+        <!-- Voice input button (UI only — no real speech recognition wired up) -->
+        <button id="voiceBtn" class="chat-icon-btn" title="Voice input">
+          <span id="voiceIcon">🎤</span>
+        </button>
+
+        <input
+          type="text"
+          id="chatInput"
+          class="chat-window__input"
+          placeholder="Type your farming question..."
+          autocomplete="off"
+        />
+
+        <!-- Send button -->
+        <button id="sendBtn" class="chat-icon-btn chat-icon-btn--send" title="Send message">
+          ➤
+        </button>
+      </div>
+
+    </div> <!-- /chat-window -->
+
+  </section>
+
+</div> <!-- /main-content -->
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="js/main.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/chatbot.js"></script>
+</body>
+</html>
