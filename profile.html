@@ -337,10 +337,13 @@
   }
 </style>
 </head>
-<body>
+<body class="dashboard-body">
+
+<!-- Dark overlay behind the sidebar on mobile (same as dashboard.html) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- ===================== SIDEBAR (identical structure across all dashboard pages) ===================== -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar__logo">
     <span class="logo-icon">🌱</span>
     <span class="logo-text">AgriSphere<span class="accent">AI</span></span>
@@ -382,10 +385,17 @@
 </aside>
 
 <!-- ===================== MAIN CONTENT ===================== -->
-<div class="main-content">
+<div class="main-content dashboard-main">
 
   <!-- ===================== TOP NAV (identical structure across all dashboard pages) ===================== -->
   <header class="topnav">
+    <!-- Hamburger button — opens the sidebar on mobile (same as dashboard.html) -->
+    <button class="topnav__menu-btn" id="sidebarToggle" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
     <div class="topnav__title">
       <h1>Farmer Profile</h1>
       <p class="topnav__subtitle">Manage your information, preferences and account settings</p>
